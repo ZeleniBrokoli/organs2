@@ -1,10 +1,10 @@
-# Povezivanje Google Drive-a sa Colab okruženjem
-# Omogućava pristup fajlovima koji se nalaze na Drive-u
-
 import numpy as np
 import warnings
-warnings.filterwarnings(action='ignore', category=FutureWarning)
 import torch
+from torch.utils.data import Dataset
+
+warnings.filterwarnings(action='ignore', category=FutureWarning)
+
 
 # Standardizacija podataka po pikselima:
 # oduzima se srednja vrednost i deli standardnom devijacijom
@@ -74,17 +74,13 @@ def prepare_data(pth_to_data):
 
     return [X_train, y_train], [X_val, y_val], [X_test, y_test]
 
+
 # Skup podataka napravljen od NumPy nizova
 # Koristi se za učitavanje podataka u PyTorch DataLoader
-
-import torch
-from torch.utils.data import Dataset
-
-
 class NumpyDataset(Dataset):
     def __init__(self, data, target):
         # Pretvaranje NumPy nizova u torch tensor
-        self.data = torch.from_numpy(data).float() #posle za CE mi treba long
+        self.data = torch.from_numpy(data).float()  # posle za CE mi treba long
         self.target = torch.from_numpy(target).float()
 
     def __getitem__(self, index):
@@ -96,4 +92,3 @@ class NumpyDataset(Dataset):
     def __len__(self):
         # Ukupan broj uzoraka u skupu
         return len(self.data)
-

@@ -85,53 +85,7 @@ def val(net, val_dataloader, loss_func, epoch, device):
 
     return av_loss
 
-# Pretreniranje autoenkodera
 
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score  # nije potrebno za autoenkoder, ali može da ostane ako ga koristiš kasnije
-import torch.optim as optim
-from torch.utils.data import DataLoader
-
-# Izbor modela za pretreniranje
-net = net_autoencoder
-net = net.to(device)
-
-# Skupovi podataka
-train_dataset = numpy_dataset(X_train, y_train)
-val_dataset = numpy_dataset(X_val[:2000], y_val[:2000])
-
-train_dataloader = DataLoader(train_dataset, batch_size=16, shuffle=True, drop_last=True)
-val_dataloader = DataLoader(val_dataset, batch_size=16, shuffle=False, drop_last=False)
-
-# Funkcija greške za rekonstrukciju
-class_loss = nn.MSELoss()
-
-# Optimizer
-optimizer = optim.Adam(net.parameters(), lr=0.001)
-# Ako želiš SGD umesto Adam-a, koristi ovu liniju i obriši Adam:
-# optimizer = optim.SGD(net.parameters(), momentum=0.9, lr=0.001)
-
-losses = []
-max_epochs = 5
-
-for epoch in range(1, max_epochs + 1):
-    train_loss = train(net, train_dataloader, optimizer, class_loss, epoch, device)
-    val_loss = val(net, val_dataloader, class_loss, epoch, device)
-    losses.append([train_loss, val_loss])
-
-losses = np.array(losses).T
-print(losses.shape)
-
-epochs = np.arange(1, max_epochs + 1)
-
-plt.figure(figsize=(10, 6))
-plt.plot(epochs, losses[0, :], label='Train')
-plt.plot(epochs, losses[1, :], label='Validation')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
 
 #saving the pretraining model OVO PREBACILA U MAIN
 # torch.save(net_autoencoder.state_dict(),'/content/drive/MyDrive/organsDB/autoencoder.pt')

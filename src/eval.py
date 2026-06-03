@@ -1,18 +1,14 @@
-import torch
-
-# Funkcija za predikciju na test skupu
+# Evaluacija modela na test skupu
 
 import numpy as np
-from sklearn.metrics import accuracy_score
 import torch
-from torch.utils.data import DataLoader
-
-test_dataset = numpy_dataset(X_test, y_test)
-test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False, drop_last=False)
+import torch.nn as nn
+from sklearn.metrics import accuracy_score
 
 
-def predict(net, test_dataloader, device):
-    net.eval()  # model je u eval modu
+def predict_classifier(net, test_dataloader, device):
+    # Predikcija za klasifikacioni model
+    net.eval()
 
     pred_store = []
     true_store = []
@@ -43,20 +39,13 @@ def predict(net, test_dataloader, device):
     print('Test set: Average Acc: {:.4f}'.format(acc), flush=True)
     print('\n')
 
-    return pred_store, true_store
+    return pred_store, true_store, acc
 
 
-# pred, true = predict(net_aeclass2, test_dataloader, device)
-
-# Funkcija za procenu autoenkodera na test skupu
-# Računa prosečnu MSE grešku rekonstrukcije
-
-test_dataset = numpy_dataset(X_test, y_test)
-test_dataloader = DataLoader(test_dataset, batch_size=16, shuffle=False, drop_last=False)
-
-
-def predict2(net, test_dataloader, device):
-    net.eval()  # model je u eval modu
+def predict_autoencoder(net, test_dataloader, device):
+    # Procena autoenkodera na test skupu
+    # Računa prosečnu MSE grešku rekonstrukcije
+    net.eval()
 
     pred_store = []
     true_store = []
@@ -88,8 +77,4 @@ def predict2(net, test_dataloader, device):
     print('Test set: Average loss: {:.4f}'.format(av_loss), flush=True)
     print('\n')
 
-    return pred_store, true_store
-
-
-# Primer poziva
-# pred, true = predict(net_autoencoder, test_dataloader, device)
+    return pred_store, true_store, av_loss
