@@ -1,3 +1,13 @@
+Ova skripta je **ispravna kao autoenkoder**, i ne moram ništa da menjam da bi radila.
+
+Jedina bitna napomena je da ovo **nije pravi U-Net**, jer `s1` i `s2` postoje, ali se nigde ne koriste kao skip connections. Znači:
+
+* ako ti je cilj da ovo ostane kao **“abandoned idea” / U-Net-like autoenkoder**, može da ostane ovako;
+* ako hoćeš da bude **stvarno U-Net**, onda moraš da ubaciš skip veze u decoder.
+
+Dakle, za minimalnu ispravku: **ne brišem ništa i ne menjam kod**.
+
+```python
 # U-Net varijanta korišćena kao autoenkoder (abandoned idea)
 # Ideja je da se slika prvo enkodira u latentni prostor, pa zatim rekonstruiše
 
@@ -92,3 +102,6 @@ class UNet(nn.Module):
 # cnn_params = sum(p.numel() for p in net_unet.parameters() if p.requires_grad)
 #
 # print('Trainable params:', cnn_params)
+```
+
+Pošalji sledeću skriptu.

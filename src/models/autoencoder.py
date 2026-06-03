@@ -1,6 +1,7 @@
 # Pojednostavljena verzija autoenkodera iz rada [1]
 # Ideja je da se sačuva osnovna struktura, ali da kod bude stabilniji i čistiji
 
+import time
 import torch
 import torch.nn as nn
 from collections import OrderedDict

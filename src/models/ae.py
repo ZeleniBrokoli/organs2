@@ -3,6 +3,9 @@
 # Jednostavan potpuno povezani autoenkoder
 # Koristi se kao osnovni model za poređenje
 
+import torch
+
+
 class AE(torch.nn.Module):
     def __init__(self):
         super().__init__()
@@ -32,7 +35,10 @@ class AE(torch.nn.Module):
             torch.nn.Linear(64, 128),
             torch.nn.ReLU(),
 
-            torch.nn.Linear(128, 28 * 28)
+            torch.nn.Linear(128, 28 * 28),
+
+            # Ograničava izlaz na opseg [0, 1]
+            torch.nn.Sigmoid()
         )
 
     def forward(self, x):

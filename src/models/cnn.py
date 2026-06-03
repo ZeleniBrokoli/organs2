@@ -40,8 +40,7 @@ class CNN(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(25, 16),
             nn.ReLU(inplace=True),
-            nn.Linear(16, 11),
-            nn.Softmax(dim=1)
+            nn.Linear(16, 11)
         )
 
     def forward(self, x):
