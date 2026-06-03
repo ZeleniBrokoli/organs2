@@ -68,7 +68,6 @@ class AutoEncoder2(nn.Module):
         return nn.Sequential(OrderedDict([
             ('conv1', nn.ConvTranspose2d(in_channels, features, kernel_size=k, padding=(k - 1) // 2)),
             ('relu1', nn.ReLU(inplace=True)),
-            ('conv2', nn.ConvTranspose2d(features, features, kernel_size=k, padding=0)),
+            ('conv2', nn.ConvTranspose2d(features, features, kernel_size=k, padding=(k - 1) // 2)),
             ('relu2', nn.ReLU(inplace=True)),
         ]))
-
