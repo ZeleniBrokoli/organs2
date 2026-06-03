@@ -92,6 +92,3 @@ class UNet(nn.Module):
 # cnn_params = sum(p.numel() for p in net_unet.parameters() if p.requires_grad)
 #
 # print('Trainable params:', cnn_params)
-```
-
-Pošalji sledeću skriptu.
