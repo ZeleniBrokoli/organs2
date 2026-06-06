@@ -21,6 +21,7 @@ from train_autoencoder import train, val
 from train_classifier import train2, val2
 from eval import predict_classifier, predict_autoencoder
 from visualize import show_reconstruction
+from utils.logger import create_run_dir, save_json
 
 
 # Putanje
@@ -28,7 +29,6 @@ BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
 DATA_PATH = PROJECT_DIR / "data" / "organsmnist.npz"
 CHECKPOINT_DIR = PROJECT_DIR / "checkpoints"
-AUTOENCODER_PATH = CHECKPOINT_DIR / "autoencoder2_paper.pt"
 
 
 def show_class_distribution(y_train, y_val, y_test):
@@ -66,7 +66,7 @@ def show_class_distribution(y_train, y_val, y_test):
     plt.show()
 
 
-def run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device):
+def run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device, run_dir, ae_log):
     # Pretreniranje autoenkodera
 
     net_autoencoder = AutoEncoder2().to(device)
@@ -90,8 +90,23 @@ def run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device):
     max_epochs = 5
 
     for epoch in range(1, max_epochs + 1):
-        train_loss = train(net_autoencoder, train_dataloader, optimizer, class_loss, epoch, device)
-        val_loss = val(net_autoencoder, val_dataloader, class_loss, epoch, device)
+        train_loss = train(
+            net_autoencoder,
+            train_dataloader,
+            optimizer,
+            class_loss,
+            epoch,
+            device,
+            log_dict=ae_log
+        )
+        val_loss = val(
+            net_autoencoder,
+            val_dataloader,
+            class_loss,
+            epoch,
+            device,
+            log_dict=ae_log
+        )
         losses.append([train_loss, val_loss])
 
     losses = np.array(losses).T
@@ -105,16 +120,22 @@ def run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device):
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
     plt.legend()
-    plt.show()
+    plt.tight_layout()
+    plt.savefig(run_dir / "autoencoder_loss.png", dpi=200)
+    plt.close()
 
-    #saving the pretraining model
-    torch.save(net_autoencoder.state_dict(), str(AUTOENCODER_PATH))
-    print(f"Model sačuvan u: {AUTOENCODER_PATH}")
+    # Čuvanje loga pretreniranja
+    save_json(ae_log, run_dir / "autoencoder_log.json")
 
-    return net_autoencoder
+    # Saving the pretraining model
+    autoencoder_path = run_dir / "autoencoder2_paper.pt"
+    torch.save(net_autoencoder.state_dict(), autoencoder_path)
+    print(f"Model sačuvan u: {autoencoder_path}")
+
+    return net_autoencoder, autoencoder_path
 
 
-def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, device):
+def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, device, run_dir, classifier_log, autoencoder_path):
     # Data augmentation
     X_train_aug, y_train_aug = augment_data(X_train, y_train)
 
@@ -123,7 +144,7 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
 
     # Učitavanje težina iz pretreniranja, uz strict=False jer classifier nije isti
     net_aeclass2.load_state_dict(
-        torch.load(str(AUTOENCODER_PATH), map_location=device),
+        torch.load(str(autoencoder_path), map_location=device),
         strict=False
     )
 
@@ -147,8 +168,23 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
     max_epochs = 20
 
     for epoch in range(1, max_epochs + 1):
-        train_loss, train_acc = train2(net_aeclass2, train_dataloader, optimizer, class_loss, epoch, device)
-        val_loss, val_acc = val2(net_aeclass2, val_dataloader, class_loss, epoch, device)
+        train_loss, train_acc = train2(
+            net_aeclass2,
+            train_dataloader,
+            optimizer,
+            class_loss,
+            epoch,
+            device,
+            log_dict=classifier_log
+        )
+        val_loss, val_acc = val2(
+            net_aeclass2,
+            val_dataloader,
+            class_loss,
+            epoch,
+            device,
+            log_dict=classifier_log
+        )
         losses.append([train_loss, train_acc, val_loss, val_acc])
 
     losses = np.array(losses).T
@@ -173,7 +209,11 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
     plt.legend(['Train', 'Validation'])
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig(run_dir / "classifier_metrics.png", dpi=200)
+    plt.close()
+
+    # Čuvanje loga klasifikatora
+    save_json(classifier_log, run_dir / "classifier_log.json")
 
     # Test evaluacija klasifikatora
     test_dataset = NumpyDataset(X_test, y_test)
@@ -182,7 +222,7 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
     pred, true, acc = predict_classifier(net_aeclass2, test_dataloader, device)
     print("Final test accuracy:", acc)
 
-    return net_aeclass2
+    return net_aeclass2, acc, pred, true
 
 
 def run_autoencoder_test(X_test, y_test, device, net_autoencoder):
@@ -214,14 +254,43 @@ def main():
     # Kreiranje foldera za težine ako ne postoji
     CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Folder za ovaj run
+    run_dir = create_run_dir()
+
+    # Logovi za ovaj run
+    ae_log = {"epochs": []}
+    classifier_log = {"train": [], "val": []}
+
     # 1) Pretreniranje autoenkodera
-    net_autoencoder = run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device)
+    net_autoencoder, autoencoder_path = run_autoencoder_pretraining(
+        X_train, y_train, X_val, y_val, device, run_dir, ae_log
+    )
 
     # 2) Test autoenkodera
-    run_autoencoder_test(X_test, y_test, device, net_autoencoder)
+    _, _, ae_test_loss = run_autoencoder_test(X_test, y_test, device, net_autoencoder)
 
     # 3) Klasifikacija sa prenetim težinama
-    run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, device)
+    net_aeclass2, clf_test_acc, pred, true = run_classifier_training(
+        X_train, y_train, X_val, y_val, X_test, y_test, device, run_dir, classifier_log, autoencoder_path
+    )
+
+    # Sažetak rezultata
+    save_json(
+        {
+            "autoencoder_test_loss": float(ae_test_loss),
+            "classifier_test_accuracy": float(clf_test_acc)
+        },
+        run_dir / "summary.json"
+    )
+
+    # Po želji možeš sačuvati i predikcije testa
+    save_json(
+        {
+            "predictions": np.asarray(pred).tolist(),
+            "targets": np.asarray(true).tolist()
+        },
+        run_dir / "test_predictions.json"
+    )
 
     show_reconstruction(
         net_autoencoder,

@@ -4,7 +4,8 @@
 import time
 import torch
 
-def train(net, dataloader, optimizer, loss_func, epoch, device):
+
+def train(net, dataloader, optimizer, loss_func, epoch, device, log_dict=None):
     net.train()  # mreža je u train modu
 
     total_loss = 0.0
@@ -53,10 +54,17 @@ def train(net, dataloader, optimizer, loss_func, epoch, device):
     print('\nTraining set: Average loss: {:.4f}'.format(av_loss), flush=True)
     print('Time for epoch = ', t1 - t0)
 
+    if log_dict is not None:
+        log_dict.setdefault("epochs", []).append({
+            "epoch": int(epoch),
+            "train_loss": float(av_loss),
+            "time": float(t1 - t0)
+        })
+
     return av_loss
 
 
-def val(net, val_dataloader, loss_func, epoch, device):
+def val(net, val_dataloader, loss_func, epoch, device, log_dict=None):
     net.eval()  # mreža je u eval modu
 
     total_loss = 0.0
@@ -82,6 +90,12 @@ def val(net, val_dataloader, loss_func, epoch, device):
 
     print('Validation set: Average loss: {:.4f}'.format(av_loss), flush=True)
     print('\n')
+
+    if log_dict is not None:
+        log_dict.setdefault("epochs", []).append({
+            "epoch": int(epoch),
+            "val_loss": float(av_loss)
+        })
 
     return av_loss
 

@@ -6,7 +6,8 @@ import torch
 import numpy as np
 from sklearn.metrics import accuracy_score
 
-def train2(net, dataloader, optimizer, loss_func, epoch, device):
+
+def train2(net, dataloader, optimizer, loss_func, epoch, device, log_dict=None):
     net.train()  # mreža je u train modu
 
     total_loss = 0.0
@@ -73,10 +74,19 @@ def train2(net, dataloader, optimizer, loss_func, epoch, device):
     print('Training set: Average Acc: {:.4f}'.format(acc), flush=True)
     print('Time for epoch = ', t1 - t0)
 
+    # Čuvanje rezultata epohe za kasniji JSON izveštaj
+    if log_dict is not None:
+        log_dict["train"].append({
+            "epoch": int(epoch),
+            "loss": float(av_loss),
+            "accuracy": float(acc),
+            "time": float(t1 - t0)
+        })
+
     return av_loss, acc
 
 
-def val2(net, val_dataloader, loss_func, epoch, device):
+def val2(net, val_dataloader, loss_func, epoch, device, log_dict=None):
     net.eval()  # mreža je u eval modu
 
     total_loss = 0.0
@@ -115,5 +125,13 @@ def val2(net, val_dataloader, loss_func, epoch, device):
     print('Validation set: Average loss: {:.4f}'.format(av_loss), flush=True)
     print('Validation set: Average Acc: {:.4f}'.format(acc), flush=True)
     print('\n')
+
+    # Čuvanje rezultata validacije za kasniji JSON izveštaj
+    if log_dict is not None:
+        log_dict["val"].append({
+            "epoch": int(epoch),
+            "loss": float(av_loss),
+            "accuracy": float(acc)
+        })
 
     return av_loss, acc
