@@ -13,9 +13,6 @@ def create_run_dir():
 
     return run_dir
 
-
-
-
 def json_converter(obj):
     # NumPy integer tipovi
     if isinstance(obj, np.integer):

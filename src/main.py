@@ -295,7 +295,8 @@ def main():
     show_reconstruction(
         net_autoencoder,
         X_test,
-        device
+        device,
+        save_path=run_dir / "reconstruction_example.png"
     )
 
 

@@ -4,7 +4,7 @@ import torch
 
 
 # Vizualizacija originalne slike, slike sa šumom i rekonstrukcije autoenkodera
-def show_reconstruction(model, X_test, device, idx=89):
+def show_reconstruction(model, X_test, device, idx=89, save_path=None):
 
     model.eval()
 
@@ -45,4 +45,10 @@ def show_reconstruction(model, X_test, device, idx=89):
     plt.axis('off')
 
     plt.tight_layout()
+
+    # Čuvanje slike ako je zadat izlazni fajl
+    if save_path is not None:
+        plt.savefig(save_path, dpi=200)
+
     plt.show()
+    plt.close()
