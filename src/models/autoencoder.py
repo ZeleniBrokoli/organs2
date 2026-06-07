@@ -1,5 +1,8 @@
 # Pojednostavljena verzija autoenkodera iz rada [1]
 # Ideja je da se sačuva osnovna struktura, ali da kod bude stabilniji i čistiji
+# mreza prima sliku, dodaje sum tokom treninga, onda uci da iz sumne verzije rekonstruise original
+# kao klasican denoising autoenkoder
+# u odnosu na [1] izbaceno pseudo-vezbanje
 
 import time
 import torch
@@ -138,7 +141,7 @@ def val(net, val_dataloader, loss_func, epoch, device):
 
             batches += 1
 
-            # I ovde može da se doda šum ako želiš da meriš denoising sposobnost
+            # i ovde može da se doda šum ako želimo da merimo denoising sposobnost
             noise = torch.randn_like(data) * 0.1
             data_noisy = data + noise
 
