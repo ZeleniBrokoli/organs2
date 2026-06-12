@@ -4,7 +4,7 @@ from scipy.ndimage import rotate
 
 # Dodavanje Gaussian šuma
 def add_noise(data):
-    noise = np.random.normal(0.0, 0.1, data.shape).astype(np.float32)
+    noise = np.random.normal(0.0, 0.05, data.shape).astype(np.float32)
     return data + noise
 
 
