@@ -26,9 +26,9 @@ def augment_data(X_train, y_train):
     # indices = np.random.choice(len(X_train), num_labeled, replace=False)
 
     # Rotacija za +-15 stepeni, kad je bila rotacija od 90, bila je tacnost 37%
-    # prepravila sam rotaciju na 10, sa 15 je bilo 38 posto
+    # smanjila rotaciju na +-5
     X_train_rot_pos = np.array([
-        rotate(img, angle=8, reshape=False, order=1, mode='constant', cval=0) # bilo je mode='nearest' za tacnost 38%, remeti ivice
+        rotate(img, angle=5, reshape=False, order=1, mode='constant', cval=0) # bilo je mode='nearest' za tacnost 38%, remeti ivice
         # for img in X_train[:num_labeled, 0]
         for img in X_train[:, 0]
     ])

@@ -164,7 +164,7 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
     # Ako želiš da treniraš samo classifier deo, ostavi ovako:
     # optimizer = optim.Adam(net_aeclass2.classifier.parameters(), lr=0.0001)
 
-    #TRECA SRECA
+    # ovo najbolje radi
     optimizer = optim.Adam(net_aeclass2.parameters(), lr=1e-4)
 
     # prvo sam probala ovo
