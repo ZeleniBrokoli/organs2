@@ -150,7 +150,7 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
 
     # Dataset za treniranje i validaciju
     train_dataset = NumpyDataset(X_train_aug, y_train_aug)
-    val_dataset = NumpyDataset(X_val[:30], y_val[:30])
+    val_dataset = NumpyDataset(X_val, y_val)
 
     train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True, drop_last=True)
     val_dataloader = DataLoader(val_dataset, batch_size=4, shuffle=False, drop_last=False)
