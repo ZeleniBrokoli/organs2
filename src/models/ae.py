@@ -1,5 +1,3 @@
-#very basic autoencoder, found online, poor recovery results
-
 # Jednostavan potpuno povezani autoenkoder
 # Koristi se kao osnovni model za poređenje
 # samo enkoder i dekoder sloj

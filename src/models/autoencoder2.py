@@ -1,5 +1,6 @@
 # Autoenkoder iz rada [1]
-# Ova verzija čuva istu ideju arhitekture, ali je kod sređen i dosledan
+# Ova verzija čuva istu ideju arhitekture, ali je kod sređen i prati [1]
+#OVO JE ISTO KAO AUTOENCODER.PY
 
 import torch
 import torch.nn as nn
@@ -49,6 +50,7 @@ class AutoEncoder2(nn.Module):
         x = self.decoder1(x)
 
         x = self.conv(x)
+        x = torch.sigmoid(x)
 
         return x
 

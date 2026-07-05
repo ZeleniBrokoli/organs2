@@ -26,6 +26,7 @@ def show_reconstruction(model, X_test, device, idx=89, save_path=None):
 
     # Pretvaranje izlaza u NumPy format za prikaz
     reconstruction = reconstruction.squeeze().cpu().numpy()
+    reconstruction = np.clip(reconstruction, 0, 1)
 
     plt.figure(figsize=(12, 4))
 

@@ -44,7 +44,6 @@ class AutoEncoderClass2(nn.Module):
         # Klasifikacioni deo
         x = self.classifier(x)
 
-        # Ne stavljamo softmax ovde ako koristimo CrossEntropyLoss
         return x
 
     @staticmethod

@@ -261,6 +261,13 @@ def main():
     ae_log = {"epochs": []}
     classifier_log = {"train": [], "val": []}
 
+    num_labeled = int(0.01 * len(X_train))
+
+    indices = np.random.choice(len(X_train), num_labeled, replace=False)
+
+    X_labeled = X_train[indices]
+    y_labeled = y_train[indices]
+
     # 1) Pretreniranje autoenkodera
     net_autoencoder, autoencoder_path = run_autoencoder_pretraining(
         X_train, y_train, X_val, y_val, device, run_dir, ae_log
@@ -271,7 +278,7 @@ def main():
 
     # 3) Klasifikacija sa prenetim težinama
     net_aeclass2, clf_test_acc, pred, true = run_classifier_training(
-        X_train, y_train, X_val, y_val, X_test, y_test, device, run_dir, classifier_log, autoencoder_path
+        X_labeled, y_labeled, X_val, y_val, X_test, y_test, device, run_dir, classifier_log, autoencoder_path
     )
 
     # Sažetak rezultata
