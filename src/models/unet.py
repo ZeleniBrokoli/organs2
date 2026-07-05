@@ -1,5 +1,4 @@
-# U-Net varijanta korišćena kao autoenkoder (abandoned idea)
-# Ideja je da se slika prvo enkodira u latentni prostor, pa zatim rekonstruiše
+# U-Net varijanta korišćena kao autoenkoder
 
 import torch
 import torch.nn as nn
@@ -36,7 +35,7 @@ class UNet(nn.Module):
         self.upconv1 = nn.Upsample(scale_factor=2, mode='nearest')
         self.decoder1 = UNet._block(features, out_channels)
 
-        # Završna konvolucija za finu rekonstrukciju
+        # Završna konvolucija
         self.conv = nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1)
 
     def forward(self, x):
@@ -75,7 +74,7 @@ class UNet(nn.Module):
 
     @staticmethod
     def _block(in_channels, features):
-        # Jedan konvolutivni blok: Conv -> ReLU -> BatchNorm -> Conv -> ReLU -> BatchNorm
+        # Jedan konvolucioni blok: Conv -> ReLU -> BatchNorm -> Conv -> ReLU -> BatchNorm
         return nn.Sequential(OrderedDict([
             ('conv1', nn.Conv2d(in_channels, features, kernel_size=3, padding=1)),
             ('relu1', nn.ReLU(inplace=True)),
@@ -86,7 +85,7 @@ class UNet(nn.Module):
         ]))
 
 
-#ovo prebaci u main, ali vidi je l ces da ga obrises prvo ili ostaje
+#ovo prebaci u main ako ga koristis
 # from models.unet import UNet
 # net_unet = UNet(in_channels=1, init_features=4, out_channels=1)
 # cnn_params = sum(p.numel() for p in net_unet.parameters() if p.requires_grad)

@@ -1,5 +1,4 @@
 # Trening i validacija za klasifikaciju
-# Ova verzija radi sa izlazom mreže bez softmax-a i sa CrossEntropyLoss
 
 import time
 import torch
@@ -45,7 +44,6 @@ def train2(net, dataloader, optimizer, loss_func, epoch, device, log_dict=None):
 
         total_loss += loss.item()
 
-        # Predikcija i tačne klase za accuracy
         pred_cls = torch.argmax(prediction, dim=1)
 
         pred_store.append(pred_cls.detach().cpu().numpy())

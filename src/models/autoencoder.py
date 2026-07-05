@@ -24,7 +24,7 @@ class AutoEncoder(nn.Module):
         self.encoder3 = nn.Conv2d(12, 18, kernel_size=3, padding=1)
         self.encoder4 = nn.Conv2d(18, 12, kernel_size=3, padding=1)
 
-        # Umesto scale_factor=7/3 koristimo fiksne dimenzije da ne zavisi od zaokruživanja
+        # Umesto scale_factor=7/3 koristimo fiksne dimenzije
         self.unpool2 = nn.Upsample(size=(7, 7), mode='nearest')
 
         # Decoder deo

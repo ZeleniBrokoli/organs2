@@ -1,6 +1,9 @@
 # Autoenkoder iz rada [1]
-# Ova verzija čuva istu ideju arhitekture, ali je kod sređen i prati [1]
-#OVO JE ISTO KAO AUTOENCODER.PY
+# Ova verzija čuva istu ideju arhitekture kao i Autoenkoder u autoencoder.py, ali je kod modifikovan i prati [1]
+# - koristi padding u enkoderu
+# - koristi Upsample(scale_factor=2) umesto fiksnih dimenzija,
+# - koristi padding u svim ConvTranspose2d slojevima,
+# - dodaje završni 1x1 Conv2d sloj za rekonstrukciju
 
 import torch
 import torch.nn as nn
@@ -28,7 +31,7 @@ class AutoEncoder2(nn.Module):
         self.unpool1 = nn.Upsample(scale_factor=2, mode='nearest')
         self.decoder1 = AutoEncoder2._block2(6, 1, 7, 3)
 
-        # Završna konvolucija za finu rekonstrukciju
+        # Završna konvolucija
         self.conv = nn.Conv2d(1, 1, kernel_size=1)
 
     def forward(self, x):

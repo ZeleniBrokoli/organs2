@@ -1,5 +1,4 @@
-# Klasifikator/encoder zasnovan na arhitekturi iz rada [1]
-# Izlaz vraća logits, bez softmax-a, pa je model spreman za CrossEntropyLoss
+# Klasifikator zasnovan na arhitekturi iz rada [1]
 
 import torch
 import torch.nn as nn

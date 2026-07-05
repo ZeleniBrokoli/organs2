@@ -161,7 +161,7 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
     # Ako želiš da treniraš samo classifier deo, ostavi ovako:
     optimizer = optim.Adam(net_aeclass2.classifier.parameters(), lr=0.0001)
 
-    # Ako želiš fine-tuning celog modela, onda umesto gore koristi:
+    # prvo sam probala ovo
     # optimizer = optim.Adam(net.parameters(), lr=0.0001)
 
     losses = []
@@ -244,7 +244,6 @@ def main():
     # X_train = X_train[:140]
     # y_train = y_train[:140]
 
-    # Automatski izbor GPU-a ako je dostupan
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device:", device)
 
@@ -290,14 +289,14 @@ def main():
         run_dir / "summary.json"
     )
 
-    # Po želji možeš sačuvati i predikcije testa
-    save_json(
-        {
-            "predictions": np.asarray(pred).tolist(),
-            "targets": np.asarray(true).tolist()
-        },
-        run_dir / "test_predictions.json"
-    )
+    # Predikcije testa (ne koristim ovo, ali neka stoji zakomentarisano, jer postoji u prethodnim pokretanjima)
+    # save_json(
+    #     {
+    #         "predictions": np.asarray(pred).tolist(),
+    #         "targets": np.asarray(true).tolist()
+    #     },
+    #     run_dir / "test_predictions.json"
+    # )
 
     show_reconstruction(
         net_autoencoder,

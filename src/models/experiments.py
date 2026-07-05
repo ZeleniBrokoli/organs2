@@ -1,4 +1,4 @@
-# Napuštena ideja: veoma jednostavan linearni autoenkoder
+# veoma jednostavan linearni autoenkoder
 # Koristi se samo za eksperimentisanje
 
 import torch

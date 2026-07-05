@@ -25,8 +25,6 @@ class CNN(nn.Module):
             nn.ReLU(inplace=True)
         )
 
-        # Automatsko određivanje dimenzije za prvi fully-connected sloj
-        # Ovo je bolje nego da se ručno hardkoduje npr. 162
         with torch.no_grad():
             dummy = torch.zeros(1, 1, 28, 28)
             dummy = self.encoder1(dummy)

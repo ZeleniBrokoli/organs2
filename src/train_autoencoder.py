@@ -77,7 +77,6 @@ def val(net, val_dataloader, loss_func, epoch, device, log_dict=None):
 
             batches += 1
 
-            # I ovde može da se doda šum ako želiš da meriš denoising sposobnost
             noise = torch.randn_like(data) * 0.1
             data_noisy = data + noise
 

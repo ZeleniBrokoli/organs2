@@ -1,6 +1,7 @@
 # Jednostavan potpuno povezani autoenkoder
 # Koristi se kao osnovni model za poređenje
 # samo enkoder i dekoder sloj
+# ne koristim ga
 
 import torch
 
