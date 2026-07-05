@@ -72,8 +72,10 @@ def run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device, run_dir,
     net_autoencoder = AutoEncoder2().to(device)
 
     # Skupovi podataka
-    train_dataset = NumpyDataset(X_train, y_train)
-    val_dataset = NumpyDataset(X_val[:2000], y_val[:2000])
+    # train_dataset = NumpyDataset(X_train, y_train) VRV TREBA OVO OVO JE TEST OVAKO
+    train_dataset = NumpyDataset(X_train, X_train)
+    # val_dataset = NumpyDataset(X_val, y_val) OVAKO TREBA VRV OVO JE TEST
+    val_dataset = NumpyDataset(X_val, X_val)
 
     train_dataloader = DataLoader(train_dataset, batch_size=16, shuffle=True, drop_last=True)
     val_dataloader = DataLoader(val_dataset, batch_size=16, shuffle=False, drop_last=False)
@@ -130,6 +132,7 @@ def run_autoencoder_pretraining(X_train, y_train, X_val, y_val, device, run_dir,
     # Saving the pretraining model
     autoencoder_path = run_dir / "autoencoder2_paper.pt"
     torch.save(net_autoencoder.state_dict(), autoencoder_path)
+
     print(f"Model sačuvan u: {autoencoder_path}")
 
     return net_autoencoder, autoencoder_path
@@ -159,7 +162,10 @@ def run_classifier_training(X_train, y_train, X_val, y_val, X_test, y_test, devi
     class_loss = nn.CrossEntropyLoss()
 
     # Ako želiš da treniraš samo classifier deo, ostavi ovako:
-    optimizer = optim.Adam(net_aeclass2.classifier.parameters(), lr=0.0001)
+    # optimizer = optim.Adam(net_aeclass2.classifier.parameters(), lr=0.0001)
+
+    #TRECA SRECA
+    optimizer = optim.Adam(net_aeclass2.parameters(), lr=1e-4)
 
     # prvo sam probala ovo
     # optimizer = optim.Adam(net.parameters(), lr=0.0001)

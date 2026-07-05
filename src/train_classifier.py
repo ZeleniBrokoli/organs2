@@ -35,7 +35,9 @@ def train2(net, dataloader, optimizer, loss_func, epoch, device, log_dict=None):
         # Forward pass
         prediction = net(data)
 
+
         # Loss
+        loss_cls = loss_func(prediction, target_cls)
         loss = loss_func(prediction, target_cls)
 
         # Backpropagation
