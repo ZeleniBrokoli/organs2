@@ -41,7 +41,7 @@ def show_reconstruction(model, X_test, device, idx=89, save_path=None):
     plt.axis('off')
 
     plt.subplot(1, 3, 3)
-    plt.imshow(reconstruction, cmap='gray')
+    plt.imshow(reconstruction, cmap='gray', vmin=reconstruction.min(), vmax=reconstruction.max())
     plt.title('Rekonstrukcija')
     plt.axis('off')
 

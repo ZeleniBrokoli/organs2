@@ -50,7 +50,6 @@ class AutoEncoder2(nn.Module):
         x = self.decoder1(x)
 
         x = self.conv(x)
-        x = torch.sigmoid(x)
 
         return x
 
