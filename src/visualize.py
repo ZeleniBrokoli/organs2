@@ -26,7 +26,7 @@ def show_reconstruction(model, X_test, device, idx=89, save_path=None):
 
     # Pretvaranje izlaza u NumPy format za prikaz
     reconstruction = reconstruction.squeeze().cpu().numpy()
-    reconstruction = np.clip(reconstruction, 0, 1)
+    #reconstruction = np.clip(reconstruction, 0, 1)
 
     plt.figure(figsize=(12, 4))
 
@@ -41,7 +41,8 @@ def show_reconstruction(model, X_test, device, idx=89, save_path=None):
     plt.axis('off')
 
     plt.subplot(1, 3, 3)
-    plt.imshow(reconstruction, cmap='gray', vmin=reconstruction.min(), vmax=reconstruction.max())
+    # plt.imshow(reconstruction, cmap='gray', vmin=reconstruction.min(), vmax=reconstruction.max())
+    plt.imshow(reconstruction, cmap='gray')
     plt.title('Rekonstrukcija')
     plt.axis('off')
 
