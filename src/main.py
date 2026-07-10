@@ -23,6 +23,8 @@ from eval import predict_classifier, predict_autoencoder
 from visualize import show_reconstruction
 from utils.logger import create_run_dir, save_json
 
+from models.cnn import CNN
+
 
 # Putanje
 BASE_DIR = Path(__file__).resolve().parent

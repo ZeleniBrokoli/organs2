@@ -33,6 +33,7 @@ class AutoEncoder2(nn.Module):
 
         # Završna konvolucija
         self.conv = nn.Conv2d(1, 1, kernel_size=1)
+        #self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         # Encoder
@@ -53,6 +54,7 @@ class AutoEncoder2(nn.Module):
         x = self.decoder1(x)
 
         x = self.conv(x)
+        #x = self.sigmoid(x)
 
         return x
 
